@@ -1,0 +1,36 @@
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=14, tm_wday=0, tm_yday=353, tm_isdst=0) >>> Запуск сервера
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=14, tm_wday=0, tm_yday=353, tm_isdst=0) >>> Начало прослушивания порта
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=14, tm_wday=0, tm_yday=353, tm_isdst=0) >>> Подключение клиента
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) Поток создан
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) pwd
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) ls
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) mkdir test
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) mkfile test\123.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) rename test\123.txt test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) copy2client test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) rmfile test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=5, tm_sec=18, tm_wday=0, tm_yday=353, tm_isdst=0) rmdir test
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) Поток создан
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) pwd
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) ls
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) mkdir test
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) mkfile test\123.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) rename test\123.txt test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) copy2client test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) rmfile test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=30, tm_wday=0, tm_yday=353, tm_isdst=0) rmdir test
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=9, tm_sec=55, tm_wday=0, tm_yday=353, tm_isdst=0) Поток создан
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=10, tm_sec=8, tm_wday=0, tm_yday=353, tm_isdst=0) Поток создан
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=26, tm_wday=0, tm_yday=353, tm_isdst=0) >>> Запуск сервера
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=26, tm_wday=0, tm_yday=353, tm_isdst=0) >>> Начало прослушивания порта
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=26, tm_wday=0, tm_yday=353, tm_isdst=0) >>> Подключение клиента
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) pwd
+ создан
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) ls
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) mkdir test
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) mkfile test\123.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) rename test\123.txt test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) copy2client test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) rmfile test\test.txt
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=36, tm_wday=0, tm_yday=353, tm_isdst=0) rmdir test
+time.struct_time(tm_year=2022, tm_mon=12, tm_mday=19, tm_hour=17, tm_min=12, tm_sec=46, tm_wday=0, tm_yday=353, tm_isdst=0) Поток создан

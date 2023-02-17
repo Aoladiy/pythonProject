@@ -1,0 +1,1 @@
+2022-12-19 18:08:36.641094 + ('127.0.0.1', 52857) + C:\Users\Aldar\PycharmProjects\pythonProject\что_я_накалякал_2_курс\programming practicing\WebServer\index1.html +200 OK
