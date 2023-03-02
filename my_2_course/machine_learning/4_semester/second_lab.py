@@ -7,7 +7,7 @@ import seaborn as sns
 
 # 1 Загрузите данные по вариантам в ноутбук.
 # загружаем данные из Excel файла
-df = pd.read_excel('../../data/ml/Вариант 1.xlsx', skiprows=2, skipfooter=1)
+df = pd.read_excel('../../data/ml/Вариант 2.xlsx', skiprows=2, skipfooter=1)
 
 # 2 Сделайте описательную статистику полученных данных.
 # получаем описательную статистику для всех количественных столбцов
@@ -93,7 +93,7 @@ print(f"Балл от 91 до 100: {range3_percent:.2f}% (отлично)")
 # 8 Какое процентное соотношение юношей и девушек писало данный экзамен?
 counts = df['Пол'].value_counts()
 percentages = counts / len(df) * 100
-print(percentages)
+print(round(percentages, 2))
 
 # 9 Сколько школ принимало участие в экзамене?
 num_schools = df['№ школы'].nunique()
@@ -104,7 +104,7 @@ short_answer = df.at[0, 'Задания с кратким ответом']
 length_short_answer = len(short_answer)
 print(f"{length_short_answer} заданий с кратким ответом")
 
-long_answer = df.at[0, 'Задания с развёрнутым ответом']
+long_answer = df.at[348, 'Задания с развёрнутым ответом']
 length_long_answer = len(re.sub(r'\([^()]*\)', '', long_answer))
 print(f"{length_long_answer} заданий с развернутым ответом")
 
@@ -114,26 +114,26 @@ print(f"{length_long_answer} заданий с развернутым ответ
 _ = df["Задания с кратким ответом"]
 print("№ задания: % невыполненных / % выполненных")
 for i in range(length_short_answer):
-    percentage = _.str[i].isin(['0', '-']).sum()/_.size
-    print(f"Задание №{i}:",round(percentage*100, 2),"/",round(1 - percentage,2)*100)
+    percentage = _.str[i].isin(['0', '-']).sum() / _.size
+    print(f"Задание №{i}:", round(percentage * 100, 2), "/", round(1 - percentage, 2) * 100)
 
 # 12 Аналогично и с типом С (ответы с развернутым ответом)
 _ = df["Задания с развёрнутым ответом"]
 print("№ задания: % невыполненных / % выполненных")
-for i in range(length_long_answer*4):
-    if i%4==0:
-        percentage = _.str[i].isin(['0']).sum()/_.size
-        print(f"Задание №{i}: ",round(percentage*100, 2),"/",round(1 - percentage,2)*100)
+for i in range(length_long_answer * 4):
+    if i % 4 == 0:
+        percentage = _.str[i].isin(['0']).sum() / _.size
+        print(f"Задание №{int(i / 4)}: ", round(percentage * 100, 2), "/", round(1 - percentage, 2) * 100)
 
 # 13 Сделайте анализ по двум школам:
 # по всем выполненным заданиям типа В
 # по заданиям типа С больше 50%
 # по среднему баллу юношей и девушек
 
-A, B = 148, 152
-score = df["Балл"][2:]
-school_data = df["№ школы"][2:]
-gender_data = df["Пол"][2:]
+A, B = 128, 129
+score = df["Балл"]
+school_data = df["№ школы"]
+gender_data = df["Пол"]
 
 school_A_male_score = []
 school_A_female_score = []
@@ -141,22 +141,35 @@ school_A_female_score = []
 school_B_male_score = []
 school_B_female_score = []
 
+short_a = df["Задания с кратким ответом"].where(df["№ школы"] == A).dropna()
+short_b = df["Задания с кратким ответом"].where(df["№ школы"] == B).dropna()
+long_a = df["Задания с развёрнутым ответом"].where(df["№ школы"] == A).dropna()
+long_b = df["Задания с развёрнутым ответом"].where(df["№ школы"] == B).dropna()
+
+short_a_temp = []
+short_b_temp = []
+
+for i in range(length_short_answer):
+    short_a_temp.append(_.str[i].isin(['0', '-']).sum() / _.size)
+    short_b_temp.append(_.str[i].isin(['0', '-']).sum() / _.size)
+
+print("анализ по всем выполненным заданиям типа В школы A", round(1 - sum(short_a_temp) / len(short_a_temp), 4) * 100)
+print("анализ по всем выполненным заданиям типа В школы B", round(1 - sum(short_b_temp) / len(short_a_temp), 4) * 100)
+
 for i in range(2, len(score)):
-    if school_data[i] == 148:
+    if school_data[i] == A:
         if gender_data[i] == "М":
-           school_A_male_score.append(score[i])
+            school_A_male_score.append(score[i])
         if gender_data[i] == "Ж":
             school_A_female_score.append(score[i])
-    if school_data[i] == 152:
+    if school_data[i] == B:
         if gender_data[i] == "М":
             school_B_male_score.append(score[i])
         if gender_data[i] == "Ж":
             school_B_female_score.append(score[i])
 
+print(f"анализ по среднему баллу юношей в школе A {round(np.mean(school_A_male_score), 2)}")
+print(f"анализ по среднему баллу девушек в школе A {round(np.mean(school_A_female_score), 2)}")
 
-print(np.mean(school_A_male_score))
-print(np.mean(school_A_female_score))
-
-print(np.mean(school_B_male_score))
-print(np.mean(school_B_female_score))
-
+print(f"анализ по среднему баллу юношей в школе B {round(np.mean(school_B_male_score), 2)}")
+print(f"анализ по среднему баллу девушек в школе B {round(np.mean(school_B_female_score), 2)}")
