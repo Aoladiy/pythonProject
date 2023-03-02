@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-data = pd.read_csv("../../data/ml_data.csv")
+data = pd.read_csv("../../data/ml/ml_data.csv")
 
 # task 1
 # a = np.array([i for i in range(1, 11)])
