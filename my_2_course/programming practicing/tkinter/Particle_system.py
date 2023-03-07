@@ -2,21 +2,19 @@ import tkinter as tk
 import random
 import numpy as np
 
-WIDTH = 400
-HEIGHT = 400
+WIDTH = 800
+HEIGHT = 800
 
 root = tk.Tk()
 canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, bg='black')
 canvas.pack()
 
-# Создаем список цветов для имитации пламени огня
 colors = ['#ff9933', '#ff6600', '#ff3300', '#cc0000', '#990000']
 
 
 # colors = ['red', 'orange']
 
 
-# Создаем класс Particle для имитации каждой частицы огня
 class Particle:
     def __init__(self, x, y):
         self.x = x
@@ -49,29 +47,22 @@ class Particle:
                            fill=self.color, outline='', tags='particle')
 
 
-# Создаем функцию для генерации новых частиц
-def generate_particles(x, y):
+def generate_particles(x=WIDTH, y=HEIGHT):
     canvas.delete('particle')
 
-    # Удаляем "мертвые" частицы
     particles[:] = [p for p in particles if p.life > 0]
 
-    # Генерируем новые частицы
     for _ in range(random.randint(5, 20)):
-        particle = Particle(x / 2, y)
-        particle.draw()
+        particle = Particle(x, y)
         particles.append(particle)
 
-    # Двигаем все частицы
     for particle in particles:
         particle.move()
         particle.draw()
 
-    # Запускаем функцию еще раз через небольшой интервал времени
-    canvas.after(20, generate_particles, coords[-1][0], coords[-1][1])
+    canvas.after(50, generate_particles, coords[-1][0], coords[-1][1])
 
 
-# Создаем список для хранения частиц огня
 particles = []
 
 coords = []
@@ -83,8 +74,5 @@ def getxy(event):
 
 
 root.bind('<ButtonPress-1>', getxy)
-
-# Запускаем генерацию частиц
-# generate_particles()
 
 root.mainloop()
