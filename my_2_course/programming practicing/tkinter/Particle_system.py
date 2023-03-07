@@ -12,7 +12,7 @@ canvas.pack()
 colors = ['#ff9933', '#ff6600', '#ff3300', '#cc0000', '#990000']
 
 
-# colors = ['red', 'orange']
+# colors = ['gray', 'white']
 
 
 class Particle:
@@ -21,7 +21,7 @@ class Particle:
         self.y = y
         self.color = random.choice(colors)
         self.size = random.randint(5, 10)
-        self.life = random.randint(5, 25)
+        self.life = random.randint(5, 20)
 
         def speed():  # Определяем направление движения
             while True:
@@ -47,7 +47,7 @@ class Particle:
                            fill=self.color, outline='', tags='particle')
 
 
-def generate_particles(x=WIDTH, y=HEIGHT):
+def generate_particles(x=WIDTH/2, y=HEIGHT):
     canvas.delete('particle')
 
     particles[:] = [p for p in particles if p.life > 0]
@@ -60,7 +60,7 @@ def generate_particles(x=WIDTH, y=HEIGHT):
         particle.move()
         particle.draw()
 
-    canvas.after(50, generate_particles, coords[-1][0], coords[-1][1])
+    canvas.after(20, generate_particles, coords[-1][0], coords[-1][1])
 
 
 particles = []
@@ -69,6 +69,7 @@ coords = []
 
 
 def getxy(event):
+    coords.clear()
     coords.append((event.x, event.y))
     generate_particles(*coords[-1])
 
