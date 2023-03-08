@@ -119,7 +119,7 @@ result_df_5_1 = pd.DataFrame({"Recipes group": ["short", "medium", "long"], "Len
 result_df_5_1.plot(kind="bar", x="Recipes group", y="Length", ylabel="average number of steps")
 plt.show()
 
-result_df_5_1.Length.value_counts().plot(kind="pie", ylabel="Recipe groups")
+result_df_5_1.Length.value_counts().plot(,,
 plt.show()
 
 
@@ -138,11 +138,11 @@ fig6_1 = plt.figure(figsize=(12, 6), constrained_layout=True)
 
 ax6_1 = fig6_1.add_subplot(1, 3, 1)
 ax6_1.set_xlabel("2008 year")
-reviews8.plot(ax=ax6_1, kind='hist')
+reviews8.plot(,,
 
 ax6_2 = fig6_1.add_subplot(1, 3, 2)
 ax6_2.set_xlabel("2009 year")
-reviews9.plot(ax=ax6_2, kind='hist')
+reviews9.plot(,,
 fig6_1.show()
 
 
