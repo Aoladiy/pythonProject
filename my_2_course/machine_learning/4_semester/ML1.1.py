@@ -42,42 +42,39 @@ class Model:
         x, y = self.third_task(x, y)
         return sum((self.predict(x) - y) ** 2) / (2 * len(x))
 
-    def fit(self, x, y, alpha=1, accuracy=0.01, max_steps=10000, decrease=2):
+    def fit(self, x, y, alpha=10, accuracy=0.01, max_steps=10000, decrease=2):
         x, y = self.third_task(x, y)
 
         step = 0
-        prev_error = 0
+        prev_error = self.error(x, y)
         increase_count = 0
         while True:
-            new_err = hyp.error(x, y)
-            if abs(prev_error - new_err) < accuracy:
-                print(f"Reached desired accuracy after {len(self.steps)} steps")
-                break
-            prev_error = new_err
-
             dJ0 = sum(self.predict(x) - y) / len(x)
             dJ1 = sum((self.predict(x) - y) * x) / len(x)
             self.b0 -= alpha * dJ0
             self.b1 -= alpha * dJ1
 
-            step += 1
+            new_err = self.error(x, y)
+
             self.steps.append(step)
             self.errors.append(new_err)
-            # if len(self.steps) == 1 and new_err > prev_error:
-            #     increase_count += 1
-            # elif increase_count == 1 and new_err > prev_error:
-            #     alpha /= decrease
-            #     self.b0 = 0
-            #     self.b1 = 0
-            #     self.steps = []
-            #     prev_error = 0
-            #     increase_count = 0
-            # else:
-            #     increase_count = 0  # сброс счетчика, если ошибка не увеличивается
+
+            if new_err > prev_error:
+                alpha /= 2
+                prev_error = new_err
+                self.b0 = 0
+                self.b1 = 0
+                continue
+
+            if abs(prev_error - new_err) < accuracy:
+                print(f"Reached desired accuracy after {len(self.steps)} steps")
+                break
+            prev_error = new_err
 
             if len(self.steps) == max_steps:
                 print("Reached maximum number of steps")
                 break
+            step += 1
         return self.steps, self.errors
 
 
