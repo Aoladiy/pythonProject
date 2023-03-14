@@ -37,6 +37,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  background-color: #9381f1;
 }
 
 .canvas {
@@ -46,7 +47,7 @@ html, body {
   width: 100%;
   min-height: 600px;
 
-  background-color: #d1cee0;
+  background-color: #9381f1;
 }
 
 .trunk,
@@ -134,7 +135,7 @@ html, body {
   height: 15px;
 
   border-radius: 75% 0 75% 0;
-  background: linear-gradient(to right, #77ed9e, #53ad71);
+  background: linear-gradient(to right, #54b073, #2b6b40);
 }
 
 .leaf:nth-child(odd) {
@@ -202,9 +203,9 @@ html, body {
   width: 5px;
   height: 5px;
   margin: 4px 9px;
-  background: crimson;
+  background: #fff1da;
   border-radius: 100% 0;
-  box-shadow: -6px 6px crimson;
+  box-shadow: -6px 6px #fff1da;
   }
 
 .petal:before,
@@ -220,9 +221,9 @@ html, body {
   left: -12px;
   top: -2px;
   margin: 2px 6px;
-  background: crimson;
+  background: #fff1da;
   border-radius: 0 100%;
-  box-shadow: 6px 6px crimson;
+  box-shadow: 6px 6px #fff1da;
   transform: rotate(-30deg);
   transform-origin: 5.5px 5.5px;
   }
@@ -232,9 +233,9 @@ html, body {
   left: -12px;
   top: -2px;
   margin: 2px 6px;
-  background: crimson;
+  background: #fff1da;
   border-radius: 0 100%;
-  box-shadow: 6px 6px crimson;
+  box-shadow: 6px 6px #fff1da;
   transform: rotate(30deg);
   transform-origin: 5.5px 5.5px
   }
