@@ -20,12 +20,18 @@ def create_boids(canvas, number_of_boids):
 
 
 def separation(nearest_neighbour, boid):
-    if nearest_neighbour is not None and boid.euclidean_distance(nearest_neighbour) < 35:
+    if (nearest_neighbour is not None) and (boid.euclidean_distance(nearest_neighbour) < 35):
         if nearest_neighbour.x - boid.x == 0:
             angle = math.atan((nearest_neighbour.y - boid.y) / 0.0001)
         else:
             angle = math.atan((nearest_neighbour.y - boid.y) / (nearest_neighbour.x - boid.x))
-        boid.angle -= angle / 2
+        # print("before", (boid.angle * (180 / math.pi)) % 360)
+        boid.angle += angle / 20
+        # print("after", (boid.angle * (180 / math.pi)) % 360)
+
+        # boid.angle += math.pi
+        # angle = math.atan2(nearest_neighbour.y - boid.y, nearest_neighbour.x - boid.x)
+        # boid.angle += angle / 20
 
 
 def alignment(neighbours, boid):
@@ -57,7 +63,7 @@ def boid_behaviours(canvas, list_of_boids, screen_size):
     for boid in list_of_boids:
         neighbours = []
         for b in list_of_boids:
-            if boid.euclidean_distance(b) < 75 and (not boid.euclidean_distance(b) == 0):
+            if boid.euclidean_distance(b) < screen_size * 0.15 and (not boid.euclidean_distance(b) == 0):
                 neighbours.append(b)
         nearest_neighbour = None
         if neighbours:
@@ -68,8 +74,8 @@ def boid_behaviours(canvas, list_of_boids, screen_size):
                     shortest_distance = distance
                     nearest_neighbour = neighbour_boid
 
-        separation(nearest_neighbour, boid)
         alignment(neighbours, boid)
+        separation(nearest_neighbour, boid)
         cohesion(neighbours, boid)
 
     for boid in list_of_boids:
@@ -79,7 +85,7 @@ def boid_behaviours(canvas, list_of_boids, screen_size):
 
 def main():
     screen_size = 900
-    number_of_boids = 100
+    number_of_boids = 75
     root = tkinter.Tk()
     canvas = initialise_canvas(root, screen_size)
     list_of_boids = create_boids(canvas, number_of_boids)
