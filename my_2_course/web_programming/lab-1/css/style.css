@@ -1,0 +1,40 @@
+/* Основные стили */
+body {
+    background-color: #f8f8f8;
+    font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+    color: black;
+    font-size: 18px;
+    font-weight: 400;
+    background-color: #eaeaea;
+    padding: 10px;
+}
+
+/* Стили для краткого описания товара */
+p.description {
+    color: #707070;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 16px;
+}
+
+/* Стили для подробного описания товара */
+p.details {
+    color: #484343;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+}
+
+/* Стили для списка характеристик товара */
+ul.features {
+    list-style-image: url("../static/imgonline-com-ua-Resize-jf20o4Pasz.png");
+}
+
+ul.features li {
+    font-size: 14px;
+    line-height: 20px;
+}
