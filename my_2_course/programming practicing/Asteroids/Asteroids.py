@@ -1,5 +1,7 @@
-import pygame
+import math
 import random
+
+import pygame
 
 pygame.init()
 
@@ -14,7 +16,8 @@ pygame.display.set_caption("Asteroids")
 
 background_image = pygame.transform.scale(pygame.image.load("background.png").convert(), (SCREEN_WIDTH, SCREEN_HEIGHT))
 player_image = pygame.transform.scale(pygame.image.load("ship.png").convert_alpha(), (64, 64))
-bullet_image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load("bullet.png").convert_alpha(), (64, 24)), 90)
+bullet_image = pygame.transform.rotate(
+    pygame.transform.scale(pygame.image.load("bullet.png").convert_alpha(), (64, 24)), 90)
 asteroid_images = [
     pygame.transform.scale(pygame.image.load("asteroid0.png").convert_alpha(), (64, 64)),
     # pygame.transform.scale(pygame.image.load("asteroid2.png").convert_alpha(), (64, 64)),
@@ -30,32 +33,47 @@ asteroid_group = pygame.sprite.Group()
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = player_image
+        self.original_image = player_image
+        self.image = self.original_image
         self.rect = self.image.get_rect()
         self.rect.centerx = SCREEN_WIDTH // 2
         self.rect.bottom = SCREEN_HEIGHT - 10
         self.speed = 5
+        self.angle = 0
 
     def update(self, keys):
-        if keys[pygame.K_LEFT] and self.rect.left > 0:
+        if (keys[pygame.K_a] or keys[pygame.K_LEFT]) and self.rect.left > 0:
             self.rect.x -= self.speed
-        if keys[pygame.K_RIGHT] and self.rect.right < SCREEN_WIDTH:
+        if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and self.rect.right < SCREEN_WIDTH:
             self.rect.x += self.speed
-        # if keys[pygame.K_LEFT] and self.rect.left > 0:
-        #     pygame.transform.rotate(self.image, 270)
+        if (keys[pygame.K_w] or keys[pygame.K_UP]) and self.rect.top > 0:
+            self.rect.y -= self.speed
+        if (keys[pygame.K_s] or keys[pygame.K_DOWN]) and self.rect.bottom < SCREEN_HEIGHT:
+            self.rect.y += self.speed
+        if keys[pygame.K_q] or keys[pygame.K_x]:
+            self.angle += 5
+            self.image = pygame.transform.rotate(self.original_image, self.angle)
+        if keys[pygame.K_e] or keys[pygame.K_c]:
+            self.angle -= 5
+            self.image = pygame.transform.rotate(self.original_image, self.angle)
+        self.rect = self.image.get_rect(center=self.rect.center)
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, angle):
         super().__init__()
-        self.image = bullet_image
+        self.original_image = bullet_image
+        self.image = self.original_image
         self.rect = self.image.get_rect()
         self.rect.centerx = x
-        self.rect.bottom = y
+        self.rect.bottom = y + 85
         self.speed = 10
+        self.angle = angle
 
     def update(self):
-        self.rect.y -= self.speed
+        self.rect.x -= self.speed * math.sin(math.radians(self.angle))
+        self.rect.y -= self.speed * math.cos(math.radians(self.angle))
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
         if self.rect.bottom < 0:
             self.kill()
 
@@ -63,15 +81,16 @@ class Bullet(pygame.sprite.Sprite):
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.transform.scale(random.choice(asteroid_images), (random.randint(30, 45), random.randint(30, 45)))
+        self.image = pygame.transform.scale(random.choice(asteroid_images),
+                                            (random.randint(30, 45), random.randint(30, 45)))
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, abs(SCREEN_WIDTH - self.rect.width))
-        self.rect.y = random.randint(-100, -40)
-        self.speed = random.randint(ASTEROID_SPEED - 2, ASTEROID_SPEED)
+        self.rect.x = SCREEN_WIDTH
+        self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
+        self.speed = random.randint(1, 4)
 
     def update(self):
-        self.rect.y += self.speed
-        if self.rect.top > SCREEN_HEIGHT:
+        self.rect.x -= self.speed
+        if self.rect.right < 0:
             self.kill()
 
 
@@ -92,7 +111,7 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                bullet = Bullet(player.rect.centerx, player.rect.top)
+                bullet = Bullet(player.rect.centerx, player.rect.top, player.angle)
                 all_sprites.add(bullet)
                 bullet_group.add(bullet)
     keys = pygame.key.get_pressed()
