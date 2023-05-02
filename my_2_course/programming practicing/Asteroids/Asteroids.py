@@ -10,6 +10,8 @@ SCREEN_HEIGHT = 600
 FPS = 60
 ASTEROID_SPEED = 3
 LIVES = 3
+MAX_ASTEROIDS = 10
+
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Asteroids")
@@ -37,18 +39,18 @@ class Player(pygame.sprite.Sprite):
         self.image = self.original_image
         self.rect = self.image.get_rect()
         self.rect.centerx = SCREEN_WIDTH // 2
-        self.rect.bottom = SCREEN_HEIGHT - 10
+        self.rect.bottom = SCREEN_HEIGHT // 2
         self.speed = 5
         self.angle = 0
 
     def update(self, keys):
-        if (keys[pygame.K_a] or keys[pygame.K_LEFT]) and self.rect.left > 0:
+        if (keys[pygame.K_a] or keys[pygame.K_LEFT]):
             self.rect.x -= self.speed
-        if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and self.rect.right < SCREEN_WIDTH:
+        if (keys[pygame.K_d] or keys[pygame.K_RIGHT]):
             self.rect.x += self.speed
-        if (keys[pygame.K_w] or keys[pygame.K_UP]) and self.rect.top > 0:
+        if (keys[pygame.K_w] or keys[pygame.K_UP]):
             self.rect.y -= self.speed
-        if (keys[pygame.K_s] or keys[pygame.K_DOWN]) and self.rect.bottom < SCREEN_HEIGHT:
+        if (keys[pygame.K_s] or keys[pygame.K_DOWN]):
             self.rect.y += self.speed
         if keys[pygame.K_q] or keys[pygame.K_x]:
             self.angle += 5
@@ -57,6 +59,16 @@ class Player(pygame.sprite.Sprite):
             self.angle -= 5
             self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
+
+        # проверяем выход за границы экрана
+        if self.rect.left > SCREEN_WIDTH:
+            self.rect.right = 0
+        elif self.rect.right < 0:
+            self.rect.left = SCREEN_WIDTH
+        if self.rect.top > SCREEN_HEIGHT:
+            self.rect.bottom = 0
+        elif self.rect.bottom < 0:
+            self.rect.top = SCREEN_HEIGHT
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -90,8 +102,16 @@ class Asteroid(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.x -= self.speed
+
+        # проверяем выход за границы экрана и перемещаем на противоположную сторону
         if self.rect.right < 0:
-            self.kill()
+            self.rect.left = SCREEN_WIDTH
+        elif self.rect.left > SCREEN_WIDTH:
+            self.rect.right = 0
+        if self.rect.bottom < 0:
+            self.rect.top = SCREEN_HEIGHT
+        elif self.rect.top > SCREEN_HEIGHT:
+            self.rect.bottom = 0
 
 
 player = Player()
@@ -101,10 +121,11 @@ player_group.add(player)
 clock = pygame.time.Clock()
 running = True
 while running:
-    if random.randint(0, 100) in range(2):
-        asteroid = Asteroid()
-        all_sprites.add(asteroid)
-        asteroid_group.add(asteroid)
+    if len(asteroid_group) < MAX_ASTEROIDS:
+        if random.randint(0, 100) in range(2):
+            asteroid = Asteroid()
+            all_sprites.add(asteroid)
+            asteroid_group.add(asteroid)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
