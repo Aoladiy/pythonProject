@@ -11,25 +11,33 @@ FPS = 60
 ASTEROID_SPEED = 3
 LIVES = 3
 MAX_ASTEROIDS = 10
-
+MAX_BACKGROUND_ASTEROIDS = 5
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Asteroids")
 
 background_image = pygame.transform.scale(pygame.image.load("background.png").convert(), (SCREEN_WIDTH, SCREEN_HEIGHT))
+
 player_image = pygame.transform.scale(pygame.image.load("ship.png").convert_alpha(), (64, 64))
+
 bullet_image = pygame.transform.rotate(
     pygame.transform.scale(pygame.image.load("bullet.png").convert_alpha(), (64, 24)), 90)
+
 asteroid_images = [
     pygame.transform.scale(pygame.image.load("asteroid0.png").convert_alpha(), (64, 64)),
     # pygame.transform.scale(pygame.image.load("asteroid2.png").convert_alpha(), (64, 64)),
     # pygame.transform.scale(pygame.image.load("asteroid3.png").convert_alpha(), (64, 64)),
 ]
 
+background_asteroid_images = [
+    pygame.transform.scale(pygame.image.load("asteroid1.png").convert_alpha(), (64, 64)),
+]
+
 all_sprites = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 asteroid_group = pygame.sprite.Group()
+background_group = pygame.sprite.Group()
 
 
 class Player(pygame.sprite.Sprite):
@@ -114,6 +122,15 @@ class Asteroid(pygame.sprite.Sprite):
             self.rect.bottom = 0
 
 
+class AsteroidBackround(Asteroid):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.transform.scale(random.choice(background_asteroid_images),
+                                            (random.randint(30, 45), random.randint(30, 45))).convert_alpha()
+        self.image.set_alpha(148)
+        self.speed = random.randint(1, 2)
+
+
 player = Player()
 all_sprites.add(player)
 player_group.add(player)
@@ -121,12 +138,23 @@ player_group.add(player)
 clock = pygame.time.Clock()
 running = True
 while running:
+
+    # фон
+    screen.blit(background_image, (0, 0))
+
+    # астероиды
+    if len(background_group) < MAX_BACKGROUND_ASTEROIDS:
+        if random.randint(0, 100) in range(2):
+            asteroid = AsteroidBackround()
+            all_sprites.add(asteroid)
+            background_group.add(asteroid)
     if len(asteroid_group) < MAX_ASTEROIDS:
         if random.randint(0, 100) in range(2):
             asteroid = Asteroid()
             all_sprites.add(asteroid)
             asteroid_group.add(asteroid)
 
+    # выстрелы
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -135,14 +163,20 @@ while running:
                 bullet = Bullet(player.rect.centerx, player.rect.top, player.angle)
                 all_sprites.add(bullet)
                 bullet_group.add(bullet)
+
+    # кнопки
     keys = pygame.key.get_pressed()
 
+    # движение
     player.update(keys)
 
     bullet_group.update()
 
     asteroid_group.update()
 
+    background_group.update()
+
+    # столкновения
     hits = pygame.sprite.groupcollide(bullet_group, asteroid_group, True, True)
     for hit in hits:
         asteroid = Asteroid()
@@ -155,8 +189,7 @@ while running:
         if LIVES <= 0:
             running = False
 
-    screen.blit(background_image, (0, 0))
-
+    # текст (сколько жизней)
     font = pygame.font.Font(None, 36)
 
     text = font.render(f"Lives: {LIVES}", True, (255, 255, 255))
@@ -166,7 +199,9 @@ while running:
     screen.blit(text, text_rect)
 
     all_sprites.draw(screen)
+    player_group.draw(screen)
 
+    # Отображение
     pygame.display.flip()
 
     clock.tick(FPS)
