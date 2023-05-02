@@ -5,11 +5,11 @@ import pygame
 
 pygame.init()
 
-# Определение констант
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FPS = 60
 ASTEROID_SPEED = 3
+LIVES = 3
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Asteroids")
@@ -130,14 +130,24 @@ while running:
 
     hits = pygame.sprite.spritecollide(player, asteroid_group, True)
     if hits:
-        running = False
+        LIVES -= 1
+        if LIVES <= 0:
+            running = False
 
     screen.blit(background_image, (0, 0))
+
+    font = pygame.font.Font(None, 36)
+
+    text = font.render(f"Lives: {LIVES}", True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.topright = (SCREEN_WIDTH - 10, 10)
+
+    screen.blit(text, text_rect)
+
     all_sprites.draw(screen)
 
     pygame.display.flip()
 
     clock.tick(FPS)
 
-# Завершение Pygame
 pygame.quit()
