@@ -7,7 +7,7 @@ function revert_string(str) {
     return third_step;
 }
 if (second_name === revert_string(second_name)) {
-    document.getElementById("answer").innerText = second_name + " is palindrome, " + second_name + " = " + revert_string(second_name)
+    document.getElementById("answer5").innerText = second_name + " is palindrome, " + second_name + " = " + revert_string(second_name)
 } else {
-    document.getElementById("answer").innerText = second_name + " isn't palindrome, " + second_name + " != " + revert_string(second_name)
+    document.getElementById("answer5").innerText = second_name + " isn't palindrome, " + second_name + " != " + revert_string(second_name)
 }

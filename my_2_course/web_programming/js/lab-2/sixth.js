@@ -6,7 +6,7 @@ for (let i = 2; i <= 17; i++) {
         }
     }
     if (flag == 1) {
-        document.getElementById("answer").innerText += i + "\n"
+        document.getElementById("answer6").innerText += i + "\n"
     }
 }
 

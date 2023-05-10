@@ -16,6 +16,6 @@ for (let i = 0; i < 3; i++) {
         if (answer == 10) {
             right_answer += 1;
         }
-        document.getElementById("answer").innerText = "кол-во правильных ответов: " + right_answer
+        document.getElementById("answer1").innerText = "кол-во правильных ответов: " + right_answer
     }
 }
