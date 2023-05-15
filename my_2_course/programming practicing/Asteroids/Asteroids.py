@@ -125,14 +125,31 @@ class Asteroid(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(random.choice(asteroid_images),
                                             (random.randint(30, 45), random.randint(30, 45)))
         self.rect = self.image.get_rect()
-        self.rect.x = SCREEN_WIDTH
-        self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
+
+        side = random.randint(1, 4)
+        if side == 1:  # сверху
+            self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
+            self.rect.y = -self.rect.height
+        elif side == 2:  # снизу
+            self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
+            self.rect.y = SCREEN_HEIGHT
+        elif side == 3:  # справа
+            self.rect.x = SCREEN_WIDTH
+            self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
+        else:  # слева
+            self.rect.x = -self.rect.width
+            self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
+
+        # случайное направление движения
+        self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
+
         self.speed = random.randint(1, 4)
 
     def update(self):
-        self.rect.x -= self.speed
+        # перемещаем астероид в заданном направлении
+        self.rect.move_ip(self.speed * self.direction.x, self.speed * self.direction.y)
 
-        # проверяем выход за границы экрана и перемещаем на противоположную сторону
+        # проверяем выход за границы экрана
         if self.rect.right < 0:
             self.rect.left = SCREEN_WIDTH
         elif self.rect.left > SCREEN_WIDTH:
@@ -165,12 +182,12 @@ while running:
 
     # астероиды
     if len(background_group) < MAX_BACKGROUND_ASTEROIDS:
-        if random.randint(0, 100) in range(2):
+        if random.randint(0, 100) in range(4):
             asteroid = AsteroidBackround()
             all_sprites.add(asteroid)
             background_group.add(asteroid)
     if len(asteroid_group) < MAX_ASTEROIDS:
-        if random.randint(0, 100) in range(2):
+        if random.randint(0, 100) in range(4):
             asteroid = Asteroid()
             all_sprites.add(asteroid)
             asteroid_group.add(asteroid)
@@ -198,6 +215,12 @@ while running:
     background_group.update()
 
     # столкновения
+    hits = pygame.sprite.groupcollide(bullet_group, asteroid_group, True, True)
+    for hit in hits:
+        asteroid = Asteroid()
+        all_sprites.add(asteroid)
+        asteroid_group.add(asteroid)
+
     hits = pygame.sprite.spritecollide(player, asteroid_group, True)
     if hits:
         LIVES -= 1
