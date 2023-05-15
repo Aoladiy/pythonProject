@@ -50,6 +50,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = SCREEN_WIDTH // 2
         self.rect.bottom = SCREEN_HEIGHT // 2
         self.speed = 5
+        self.max_speed = MAX_SPEED
         self.angle = 0
         self.vx = 0
         self.vy = 0
@@ -72,10 +73,21 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_w]:
             self.vx += -self.speed * math.sin(math.radians(self.angle)) * 0.05
             self.vy += -self.speed * math.cos(math.radians(self.angle)) * 0.05
+
+        # затормаживание
+        self.vx *= 0.99
+        self.vy *= 0.99
+
+        # ограничение на максимальную скорость
+        speed = math.sqrt(self.vx ** 2 + self.vy ** 2)
+        if speed > self.max_speed:
+            factor = self.max_speed / speed
+            self.vx *= factor
+            self.vy *= factor
+
         self.rect.x += self.vx
         self.rect.y += self.vy
         self.rect = self.image.get_rect(center=self.rect.center)
-
 
         # проверяем выход за границы экрана
         if self.rect.left > SCREEN_WIDTH:
@@ -186,12 +198,6 @@ while running:
     background_group.update()
 
     # столкновения
-    hits = pygame.sprite.groupcollide(bullet_group, asteroid_group, True, True)
-    for hit in hits:
-        asteroid = Asteroid()
-        all_sprites.add(asteroid)
-        asteroid_group.add(asteroid)
-
     hits = pygame.sprite.spritecollide(player, asteroid_group, True)
     if hits:
         LIVES -= 1
