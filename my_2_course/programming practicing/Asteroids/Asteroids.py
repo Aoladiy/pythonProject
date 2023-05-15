@@ -12,6 +12,7 @@ ASTEROID_SPEED = 3
 LIVES = 3
 MAX_ASTEROIDS = 10
 MAX_BACKGROUND_ASTEROIDS = 5
+MAX_SPEED = 10
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Asteroids")
@@ -50,15 +51,17 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = SCREEN_HEIGHT // 2
         self.speed = 5
         self.angle = 0
+        self.vx = 0
+        self.vy = 0
 
     def update(self, keys):
-        if (keys[pygame.K_a] or keys[pygame.K_LEFT]):
+        if keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
-        if (keys[pygame.K_d] or keys[pygame.K_RIGHT]):
+        if keys[pygame.K_RIGHT]:
             self.rect.x += self.speed
-        if (keys[pygame.K_w] or keys[pygame.K_UP]):
+        if keys[pygame.K_UP]:
             self.rect.y -= self.speed
-        if (keys[pygame.K_s] or keys[pygame.K_DOWN]):
+        if keys[pygame.K_DOWN]:
             self.rect.y += self.speed
         if keys[pygame.K_q] or keys[pygame.K_x]:
             self.angle += 5
@@ -66,7 +69,13 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_e] or keys[pygame.K_c]:
             self.angle -= 5
             self.image = pygame.transform.rotate(self.original_image, self.angle)
+        if keys[pygame.K_w]:
+            self.vx += -self.speed * math.sin(math.radians(self.angle)) * 0.05
+            self.vy += -self.speed * math.cos(math.radians(self.angle)) * 0.05
+        self.rect.x += self.vx
+        self.rect.y += self.vy
         self.rect = self.image.get_rect(center=self.rect.center)
+
 
         # проверяем выход за границы экрана
         if self.rect.left > SCREEN_WIDTH:
