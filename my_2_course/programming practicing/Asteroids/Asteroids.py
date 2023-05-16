@@ -9,8 +9,8 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FPS = 60
 ASTEROID_SPEED = 3
-LIVES = 3
-MAX_ASTEROIDS = 10
+LIVES = 30
+MAX_ASTEROIDS = 20
 MAX_BACKGROUND_ASTEROIDS = 5
 MAX_SPEED = 10
 
@@ -128,17 +128,17 @@ class Asteroid(pygame.sprite.Sprite):
 
         side = random.randint(1, 4)
         if side == 1:  # сверху
-            self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
+            self.rect.x = random.randint(0, SCREEN_WIDTH)
             self.rect.y = -self.rect.height
         elif side == 2:  # снизу
-            self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
+            self.rect.x = random.randint(0, SCREEN_WIDTH)
             self.rect.y = SCREEN_HEIGHT
         elif side == 3:  # справа
             self.rect.x = SCREEN_WIDTH
-            self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
+            self.rect.y = random.randint(0, SCREEN_HEIGHT)
         else:  # слева
             self.rect.x = -self.rect.width
-            self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
+            self.rect.y = random.randint(0, SCREEN_HEIGHT)
 
         # случайное направление движения
         self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
