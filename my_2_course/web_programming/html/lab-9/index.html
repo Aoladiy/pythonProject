@@ -1,0 +1,68 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<H1>Регистрация</H1>
+<form name="Sel3" class="container">
+    <div class="mb-3 row">
+        <label for="Id" class="col-sm-2 col-form-label"><b>Идентификатор:</b></label>
+        <div class="col-sm-10">
+            <input type="text" name="Id" id="Id" class="form-control" required autofocus>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="Pwd" class="col-sm-2 col-form-label"><b>Пароль:</b></label>
+        <div class="col-sm-10">
+            <input type="password" name="Pwd" id="Pwd" class="form-control" required>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="Pwd1" class="col-sm-2 col-form-label"><b>Проверка пароля:</b></label>
+        <div class="col-sm-10">
+            <input type="password" name="Pwd1" id="Pwd1" class="form-control" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <button type="button" class="btn btn-primary" onclick="Complete1()">Готово</button>
+            <button type="reset" class="btn btn-secondary">Сброс</button>
+        </div>
+    </div>
+</form>
+<div>
+    <div id="er" style="display: none">
+    <p id="err"></p>
+    </div>
+    <div id="success" style="display: none">
+    <p>Ваш идентификатор: </p>
+    <p id="ident"></p>
+    <p>Ваш пароль: </p>
+    <p id="passw"></p>
+    </div>
+</div>
+    <script>
+        function Complete1()
+        {
+            if(document.Sel3.Pwd.value==document.Sel3.Pwd1.value) {
+                    document.getElementById('er').style.display = 'none';
+                    document.getElementById('success').style.display = 'block';
+                    document.getElementById('ident').innerHTML = document.Sel3.Id.value;
+                    document.getElementById('passw').innerHTML = document.Sel3.Pwd.value;
+                    }
+            else {
+                    document.getElementById('success').style.display = 'none';
+                    document.getElementById('er').style.display = 'block';
+                    document.getElementById('err').innerText = "Ошибка при вводе пароля!";
+        }}
+
+
+</script>
+</body>
+</html>
