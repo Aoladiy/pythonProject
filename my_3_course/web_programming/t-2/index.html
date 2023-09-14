@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Форма с сохранением в localStorage</title>
+</head>
+<body>
+    <h1>Форма с сохранением в localStorage</h1>
+    <form id="myForm">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <input type="submit" value="Сохранить">
+    </form>
+    <script>
+        const form = document.getElementById("myForm");
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+
+            const userData = {
+                name: name,
+                email: email,
+            };
+
+            const userDataJSON = JSON.stringify(userData);
+
+            localStorage.setItem("userData", userDataJSON);
+
+            form.reset();
+
+            alert("Данные успешно сохранены в localStorage!");
+        });
+
+        // Восстановливаем данные из localStorage
+        window.addEventListener("load", function () {
+            const userDataJSON = localStorage.getItem("userData");
+
+            if (userDataJSON) {
+                const userData = JSON.parse(userDataJSON);
+
+                document.getElementById("name").value = userData.name;
+                document.getElementById("email").value = userData.email;
+            }
+        });
+    </script>
+</body>
+</html>
