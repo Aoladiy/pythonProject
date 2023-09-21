@@ -1,53 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Форма с сохранением в localStorage</title>
 </head>
 <body>
-    <h1>Форма с сохранением в localStorage</h1>
-    <form id="myForm">
-        <label for="name">Имя:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <input type="submit" value="Сохранить">
+<div class="container">
+    <h1 class="mt-4">Форма с сохранением в localStorage</h1>
+    <form id="myForm" class="mt-4">
+        <div class="form-group">
+            <label for="name">Имя:</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+        <div class="btn-group">
+            <input type="submit" class="btn btn-primary" value="Сохранить">
+            <button type="button" id="cancelButton" class="btn btn-secondary">Отменить изменение</button>
+        </div>
     </form>
-    <script>
-        const form = document.getElementById("myForm");
-        form.addEventListener("submit", function (event) {
-            event.preventDefault();
+    <table id="dataTable" class="table table-dark mt-4">
+        <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Здесь будут отображаться данные -->
+        </tbody>
+    </table>
+</div>
+<script>
+    //Смотрим содержимое LocalStorage
+    for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i); // Получаем ключ
+    const value = localStorage.getItem(key); // Получаем значение
+    console.log(`Ключ: ${key}, Значение: ${value}`);
+}
 
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
+    const form = document.getElementById("myForm");
+    const dataTable = document.getElementById("dataTable");
+    const cancelButton = document.getElementById("cancelButton");
+    let userDataArray = [];
 
-            const userData = {
-                name: name,
-                email: email,
-            };
+    cancelButton.addEventListener("click", function () {
+        form.reset();
 
-            const userDataJSON = JSON.stringify(userData);
+        // Сбрасываем индекс редактирования и возвращаем текст кнопки "Сохранить"
+        form.removeAttribute("data-edit-index");
+        form.querySelector("input[type='submit']").value = "Сохранить";
+    });
 
-            localStorage.setItem("userData", userDataJSON);
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            form.reset();
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
 
-            alert("Данные успешно сохранены в localStorage!");
-        });
+        const editIndex = form.getAttribute("data-edit-index");
 
-        // Восстановливаем данные из localStorage
-        window.addEventListener("load", function () {
-            const userDataJSON = localStorage.getItem("userData");
+        if (editIndex !== null) {
+            // Если есть индекс записи для редактирования, обновляем запись в массиве
+            userDataArray[editIndex] = {name, email};
 
-            if (userDataJSON) {
-                const userData = JSON.parse(userDataJSON);
+            // Находим соответствующую строку в таблице и обновляем её
+            const row = dataTable.querySelector("tbody").rows[editIndex];
+            row.cells[0].innerHTML = name;
+            row.cells[1].innerHTML = email;
 
-                document.getElementById("name").value = userData.name;
-                document.getElementById("email").value = userData.email;
-            }
-        });
-    </script>
+            // Сбрасываем индекс редактирования и возвращаем текст кнопки "Сохранить"
+            form.removeAttribute("data-edit-index");
+            form.querySelector("input[type='submit']").value = "Сохранить";
+        } else {
+            // Если нет индекса, добавляем новую запись
+            const newRow = dataTable.querySelector("tbody").insertRow();
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            cell1.innerHTML = name;
+            cell2.innerHTML = email;
+
+            const editButton = document.createElement("button");
+            editButton.innerText = "Редактировать";
+            editButton.addEventListener("click", () => editRow(userDataArray.length - 1));
+            const deleteButton = document.createElement("button");
+            deleteButton.innerText = "Удалить";
+            deleteButton.addEventListener("click", () => deleteRow(userDataArray.length - 1));
+
+            cell3.appendChild(editButton);
+            cell3.appendChild(deleteButton);
+
+            userDataArray.push({name, email});
+        }
+
+        // Очищаем форму
+        form.reset();
+
+        // Сохраняем данные в localStorage
+        const userDataArrayJSON = JSON.stringify(userDataArray);
+        localStorage.setItem("userDataArray", userDataArrayJSON);
+
+        // alert("Данные успешно сохранены в таблицу и localStorage!");
+    });
+
+    // Восстанавливаем данные из localStorage при загрузке страницы
+    window.addEventListener("load", function () {
+        const userDataArrayJSON = localStorage.getItem("userDataArray");
+
+        if (userDataArrayJSON) {
+            userDataArray = JSON.parse(userDataArrayJSON);
+
+            // Восстанавливаем все записи из массива
+            userDataArray.forEach((userData, index) => {
+                const newRow = dataTable.querySelector("tbody").insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                const cell3 = newRow.insertCell(2);
+                cell1.innerHTML = userData.name;
+                cell2.innerHTML = userData.email;
+
+                // Добавляем кнопки редактирования и удаления для каждой записи
+                const editButton = document.createElement("button");
+                editButton.innerText = "Редактировать";
+                editButton.addEventListener("click", () => editRow(index));
+                const deleteButton = document.createElement("button");
+                deleteButton.innerText = "Удалить";
+                deleteButton.addEventListener("click", () => deleteRow(index));
+
+                // Добавляем кнопки в ячейку "Действия"
+                cell3.appendChild(editButton);
+                cell3.appendChild(deleteButton);
+            });
+        }
+    });
+
+    function editRow(index) {
+        // Получаем данные из массива userDataArray по индексу
+        const userData = userDataArray[index];
+
+        // Заполняем форму данными из записи
+        document.getElementById("name").value = userData.name;
+        document.getElementById("email").value = userData.email;
+
+        // Устанавливаем индекс записи, которую мы редактируем, в качестве кастомного атрибута формы
+        form.setAttribute("data-edit-index", index);
+
+        // Меняем текст кнопки "Сохранить" на "Обновить"
+        form.querySelector("input[type='submit']").value = "Обновить";
+    }
+
+    function deleteRow(index) {
+        // Удаляем запись из массива userDataArray и из таблицы
+        userDataArray.splice(index, 1);
+        localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
+        dataTable.querySelector("tbody").deleteRow(index);
+    }
+</script>
 </body>
 </html>
