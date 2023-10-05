@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="mt-4">Форма с сохранением в localStorage</h1>
+    <h1 class="mt-4">Форма с сохранением в localStorage и на сервер</h1>
     <form id="myForm" class="mt-4">
         <div class="form-group">
             <label for="name">Имя:</label>
@@ -38,10 +38,31 @@
 <script>
     //Смотрим содержимое LocalStorage
     for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i); // Получаем ключ
-    const value = localStorage.getItem(key); // Получаем значение
-    console.log(`Ключ: ${key}, Значение: ${value}`);
-}
+        const key = localStorage.key(i); // Получаем ключ
+        const value = localStorage.getItem(key); // Получаем значение
+        console.log(`Ключ: ${key}, Значение: ${value}`);
+    }
+
+    function send_to_server() {
+        const data = JSON.parse(localStorage.getItem("userDataArray"));
+        const url = "http://localhost:80/in_xampp/save_data.php";
+
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: 'no-cors' // Включаем режим no-cors
+        })
+            .then(response => {
+                // Обработка ответа в режиме no-cors ограничена
+                console.log("Запрос выполнен без CORS-проверки");
+            })
+            .catch(error => {
+                console.error("Произошла ошибка при отправке данных:", error);
+            });
+    }
 
     const form = document.getElementById("myForm");
     const dataTable = document.getElementById("dataTable");
@@ -105,6 +126,8 @@
         const userDataArrayJSON = JSON.stringify(userDataArray);
         localStorage.setItem("userDataArray", userDataArrayJSON);
 
+        send_to_server()
+
         // alert("Данные успешно сохранены в таблицу и localStorage!");
     });
 
@@ -152,14 +175,22 @@
 
         // Меняем текст кнопки "Сохранить" на "Обновить"
         form.querySelector("input[type='submit']").value = "Обновить";
+        send_to_server()
     }
 
     function deleteRow(index) {
-        // Удаляем запись из массива userDataArray и из таблицы
+        // Remove the row from the userDataArray
         userDataArray.splice(index, 1);
+
+        // Remove the row from the table
+        const tbody = dataTable.querySelector("tbody");
+        tbody.removeChild(tbody.children[index]);
+
+        // Update localStorage with the modified userDataArray
         localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-        dataTable.querySelector("tbody").deleteRow(index);
+        send_to_server()
     }
+
 </script>
 </body>
 </html>
