@@ -17,6 +17,18 @@
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" class="form-control" required>
         </div>
+        <div class="form-group">
+            <label for="group">Группа:</label>
+            <select id="group" name="group" class="form-control">
+                <option value="ПИ21-1">ПИ21-1</option>
+                <option value="ПИ21-2">ПИ21-2</option>
+                <option value="ПИ21-3">ПИ21-3</option>
+                <option value="ПИ21-4">ПИ21-4</option>
+                <option value="ПИ21-5">ПИ21-5</option>
+                <option value="ПИ21-6">ПИ21-6</option>
+                <option value="ПИ21-7">ПИ21-7</option>
+            </select>
+        </div>
         <div class="btn-group">
             <input type="submit" class="btn btn-primary" value="Сохранить">
             <button type="button" id="cancelButton" class="btn btn-secondary">Отменить изменение</button>
@@ -25,8 +37,12 @@
     <table id="dataTable" class="table table-dark mt-4">
         <thead>
         <tr>
-            <th>Имя</th>
-            <th>Email</th>
+            <th>Имя <input type="text" id="nameSearch" onkeyup="searchTable('nameSearch', 'dataTable', 0)"
+                           placeholder="Поиск по имени"></th>
+            <th>Email <input type="text" id="emailSearch" onkeyup="searchTable('emailSearch', 'dataTable', 1)"
+                             placeholder="Поиск по email"></th>
+            <th>Группа <input type="text" id="groupSearch" onkeyup="searchTable('groupSearch', 'dataTable', 2)"
+                              placeholder="Поиск по группе"></th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -42,6 +58,27 @@
         const value = localStorage.getItem(key); // Получаем значение
         console.log(`Ключ: ${key}, Значение: ${value}`);
     }
+
+    function searchTable(inputId, tableId, columnIndex) {
+        const input = document.getElementById(inputId);
+        const filter = input.value.toUpperCase();
+        const table = document.getElementById(tableId);
+        const tbody = table.querySelector("tbody");
+        const rows = tbody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const cell = rows[i].getElementsByTagName("td")[columnIndex];
+            if (cell) {
+                const textValue = cell.textContent || cell.innerText;
+                if (textValue.toUpperCase().indexOf(filter) > -1) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    }
+
 
     function send_to_server() {
         const data = JSON.parse(localStorage.getItem("userDataArray"));
@@ -82,29 +119,33 @@
 
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
+        const group = document.getElementById("group").value;
 
         const editIndex = form.getAttribute("data-edit-index");
 
         if (editIndex !== null) {
-            // Если есть индекс записи для редактирования, обновляем запись в массиве
-            userDataArray[editIndex] = {name, email};
+            // If there's an edit index, update the record in the array
+            userDataArray[editIndex] = {name, email, group};
 
-            // Находим соответствующую строку в таблице и обновляем её
+            // Update the corresponding row in the table
             const row = dataTable.querySelector("tbody").rows[editIndex];
             row.cells[0].innerHTML = name;
             row.cells[1].innerHTML = email;
+            row.cells[2].innerHTML = group;
 
-            // Сбрасываем индекс редактирования и возвращаем текст кнопки "Сохранить"
+            // Clear the edit index and set the submit button text back to "Сохранить"
             form.removeAttribute("data-edit-index");
             form.querySelector("input[type='submit']").value = "Сохранить";
         } else {
-            // Если нет индекса, добавляем новую запись
+            // If there's no edit index, add a new record
             const newRow = dataTable.querySelector("tbody").insertRow();
             const cell1 = newRow.insertCell(0);
             const cell2 = newRow.insertCell(1);
             const cell3 = newRow.insertCell(2);
+            const cell4 = newRow.insertCell(3);
             cell1.innerHTML = name;
             cell2.innerHTML = email;
+            cell3.innerHTML = group;
 
             const editButton = document.createElement("button");
             editButton.innerText = "Редактировать";
@@ -113,22 +154,21 @@
             deleteButton.innerText = "Удалить";
             deleteButton.addEventListener("click", () => deleteRow(userDataArray.length - 1));
 
-            cell3.appendChild(editButton);
-            cell3.appendChild(deleteButton);
+            cell4.appendChild(editButton);
+            cell4.appendChild(deleteButton);
 
-            userDataArray.push({name, email});
+            userDataArray.push({name, email, group});
         }
 
-        // Очищаем форму
+        // Clear the form
         form.reset();
 
-        // Сохраняем данные в localStorage
+        // Save the data to localStorage
         const userDataArrayJSON = JSON.stringify(userDataArray);
         localStorage.setItem("userDataArray", userDataArrayJSON);
 
-        send_to_server()
-
-        // alert("Данные успешно сохранены в таблицу и localStorage!");
+        // Send data to the server
+        send_to_server();
     });
 
     // Восстанавливаем данные из localStorage при загрузке страницы
@@ -144,8 +184,10 @@
                 const cell1 = newRow.insertCell(0);
                 const cell2 = newRow.insertCell(1);
                 const cell3 = newRow.insertCell(2);
+                const cell4 = newRow.insertCell(3);
                 cell1.innerHTML = userData.name;
                 cell2.innerHTML = userData.email;
+                cell3.innerHTML = userData.group;
 
                 // Добавляем кнопки редактирования и удаления для каждой записи
                 const editButton = document.createElement("button");
@@ -156,39 +198,35 @@
                 deleteButton.addEventListener("click", () => deleteRow(index));
 
                 // Добавляем кнопки в ячейку "Действия"
-                cell3.appendChild(editButton);
-                cell3.appendChild(deleteButton);
+                cell4.appendChild(editButton);
+                cell4.appendChild(deleteButton);
             });
         }
     });
 
     function editRow(index) {
-        // Получаем данные из массива userDataArray по индексу
         const userData = userDataArray[index];
-
-        // Заполняем форму данными из записи
         document.getElementById("name").value = userData.name;
         document.getElementById("email").value = userData.email;
+        document.getElementById("group").value = userData.group;
 
-        // Устанавливаем индекс записи, которую мы редактируем, в качестве кастомного атрибута формы
         form.setAttribute("data-edit-index", index);
-
-        // Меняем текст кнопки "Сохранить" на "Обновить"
         form.querySelector("input[type='submit']").value = "Обновить";
-        send_to_server()
+
+        // Send data to the server
+        send_to_server();
     }
 
     function deleteRow(index) {
-        // Remove the row from the userDataArray
         userDataArray.splice(index, 1);
 
-        // Remove the row from the table
         const tbody = dataTable.querySelector("tbody");
         tbody.removeChild(tbody.children[index]);
 
-        // Update localStorage with the modified userDataArray
         localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-        send_to_server()
+
+        // Send data to the server
+        send_to_server();
     }
 
 </script>
