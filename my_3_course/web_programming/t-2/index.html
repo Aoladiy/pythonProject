@@ -128,7 +128,7 @@
 
     function send_to_server() {
         const data = JSON.parse(localStorage.getItem("userDataArray"));
-        const url = "http://localhost:80/in_xampp/save_data.php";
+        const url = "http://localhost:8000/save_data";
 
         fetch(url, {
             method: "POST",
