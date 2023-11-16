@@ -1,3 +1,4 @@
+let ip = 'http://localhost:8000/';
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById('myForm');
     const cancelButton = document.getElementById('cancelButton');
@@ -16,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Функция для получения данных из сервера и отображения их в таблице
     function fetchDataAndPopulateTable() {
-        fetch('http://localhost:8000/get_data')
+        fetch(ip + 'get_data')
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.querySelector('#dataTable tbody');
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isEditing) {
             // Если это редактирование, обработать редактирование данных
             const itemId = form.getAttribute('data-editing');
-            fetch(`http://localhost:8000/edit_data/${itemId}`, {
+            fetch(ip + `edit_data/${itemId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             resetForm();
         } else {
             // Если это добавление новых данных
-            fetch('http://localhost:8000/save_data', {
+            fetch(ip + 'save_data', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const itemId = this.getAttribute('data-id');
-                fetch(`http://localhost:8000/delete_data/${itemId}`, {
+                fetch(ip + `delete_data/${itemId}`, {
                     method: 'DELETE'
                 })
                     .then(() => {
